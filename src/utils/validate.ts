@@ -1,5 +1,5 @@
-import Commander from 'commander';
-import { normalizeUrl } from './url';
+import * as Commander from 'commander';
+import { normalizeUrl } from './url.js';
 
 export function validateNumberInput(value: string) {
   const parsedValue = Number(value);

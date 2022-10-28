@@ -1,7 +1,7 @@
 import fs from 'fs/promises';
 import path from 'path';
 import shelljs from 'shelljs';
-import { PakeAppOptions } from './types';
+import { PakeAppOptions } from './types.js';
 
 export default async function pake(url: string, options: PakeAppOptions) {
   console.log('PakeAppOptions', options)

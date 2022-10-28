@@ -1,6 +1,6 @@
-import { getIdentifier } from '../helpers/tauriConfig';
-import { PakeAppOptions, PakeCliOptions } from '../types';
-import { getTitleByURL } from './title';
+import { getIdentifier } from '../helpers/tauriConfig.js';
+import { PakeAppOptions, PakeCliOptions } from '../types.js';
+import { getTitleByURL } from './title.js';
 
 export default async function handleOptions(options: PakeCliOptions, url: string): Promise<PakeAppOptions> {
   const appOptions: PakeAppOptions = {

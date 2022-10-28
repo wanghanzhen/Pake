@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 import { program } from 'commander';
-import { DEFAULT_PAKE_OPTIONS } from './defaults';
-import pake from './pake';
-import { PakeCliOptions } from './types';
-import { validateNumberInput, validateUrlInput } from './utils/validate';
-import handleInputOptions from './options';
+import { DEFAULT_PAKE_OPTIONS } from './defaults.js';
+import pake from './pake.js';
+import { PakeCliOptions } from './types.js';
+import { validateNumberInput, validateUrlInput } from './utils/validate.js';
+import handleInputOptions from './options/index.js';
+import { prepareCheck } from './helpers/prepareCheck.js';
 
 program.version('0.0.1').description('A cli application named pro');
 
@@ -19,7 +20,7 @@ program
   .option('--fullscreen', 'makes the packaged app start in full screen', DEFAULT_PAKE_OPTIONS.fullscreen)
   .option('--transparent', 'transparent title bar', DEFAULT_PAKE_OPTIONS.transparent)
   .action(async (url: string, options: PakeCliOptions) => {
-    // TODO rust environment check
+    await prepareCheck();
 
     const appOptions = await handleInputOptions(options, url);
 

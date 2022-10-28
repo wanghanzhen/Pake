@@ -1,4 +1,4 @@
-import { PakeCliOptions } from './types';
+import { PakeCliOptions } from './types.js';
 
 export const DEFAULT_PAKE_OPTIONS: PakeCliOptions = {
   icon: 'xxx',

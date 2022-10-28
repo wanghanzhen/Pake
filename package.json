@@ -19,15 +19,20 @@
     "tauri": "tauri",
     "cli": "tsc --build --watch"
   },
+  "type": "module",
+  "exports": "./dist/pake.js",
   "license": "MIT",
   "dependencies": {
     "@tauri-apps/api": "^1.0.2",
     "axios": "^1.1.3",
-    "is-url": "^1.2.4"
+    "is-url": "^1.2.4",
+    "ora": "^6.1.2",
+    "prompts": "^2.4.2"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^1.0.2",
     "@types/is-url": "^1.2.30",
+    "@types/prompts": "^2.4.1",
     "@types/shelljs": "^0.8.11",
     "commander": "^9.4.1",
     "shelljs": "^0.8.5",
