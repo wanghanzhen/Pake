@@ -1,5 +1,6 @@
 import { getIdentifier } from '../helpers/tauriConfig.js';
 import { PakeAppOptions, PakeCliOptions } from '../types.js';
+import { handleIcon } from './icon.js';
 import { getTitleByURL } from './title.js';
 
 export default async function handleOptions(options: PakeCliOptions, url: string): Promise<PakeAppOptions> {
@@ -15,7 +16,9 @@ export default async function handleOptions(options: PakeCliOptions, url: string
     appOptions.name = appOptions.title;
   }
 
-  appOptions.identifier = getIdentifier(appOptions.name, url)
+  appOptions.identifier = getIdentifier(appOptions.name, url);
+
+  appOptions.icon = await handleIcon(appOptions, url);
 
   return appOptions;
 }

@@ -1,24 +1,27 @@
 {
   "package": {
-    "productName": "WeRead",
+    "productName": "baidu",
     "version": "0.2.0"
   },
   "tauri": {
     "windows": [
       {
-        "url": "https://weread.qq.com/",
-        "transparent": true,
+        "url": "https://baidu.com",
+        "transparent": false,
         "fullscreen": false,
-        "width": 1200,
-        "height": 728,
-        "resizable": true
+        "width": 1280,
+        "height": 800,
+        "resizable": true,
+        "title": "百度一下，你就知道"
       }
     ],
     "allowlist": {
       "all": true
     },
     "bundle": {
-      "icon": ["icons/weRead.icns"],
+      "icon": [
+        "/var/folders/vd/8qqrr2yd6gbf23bgx5vhdzrm0000gn/T/tmp-91408-NUAYXSkVg43n/icon.icns"
+      ],
       "active": true,
       "category": "DeveloperTool",
       "copyright": "",
@@ -26,7 +29,7 @@
         "depends": []
       },
       "externalBin": [],
-      "identifier": "com.tw93.weRead",
+      "identifier": "pake-bb6e08",
       "longDescription": "",
       "macOS": {
         "entitlements": null,

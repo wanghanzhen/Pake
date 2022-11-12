@@ -1,13 +1,12 @@
 #!/usr/bin/env node
 import { program } from 'commander';
 import { DEFAULT_PAKE_OPTIONS } from './defaults.js';
-import pake from './pake.js';
 import { PakeCliOptions } from './types.js';
 import { validateNumberInput, validateUrlInput } from './utils/validate.js';
 import handleInputOptions from './options/index.js';
-import { prepareCheck } from './helpers/prepareCheck.js';
+import BuilderFactory from './builders/BuilderFactory.js';
 
-program.version('0.0.1').description('A cli application named pro');
+program.version('0.0.1').description('A cli application can build website to app, driven by tauri');
 
 program
   .argument('<url>', 'the web url you want to package', validateUrlInput)
@@ -20,11 +19,12 @@ program
   .option('--fullscreen', 'makes the packaged app start in full screen', DEFAULT_PAKE_OPTIONS.fullscreen)
   .option('--transparent', 'transparent title bar', DEFAULT_PAKE_OPTIONS.transparent)
   .action(async (url: string, options: PakeCliOptions) => {
-    await prepareCheck();
+    const builder = BuilderFactory.create();
+    await builder.prepare();
 
     const appOptions = await handleInputOptions(options, url);
 
-    pake(url, appOptions);
+    builder.build(url, appOptions);
   });
 
 program.parse();
