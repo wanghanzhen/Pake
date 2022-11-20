@@ -8,9 +8,9 @@ import pageIcon from 'page-icon';
 import png2icons from 'png2icons';
 import ICO from 'icojs';
 import fs from 'fs/promises';
+import { fileURLToPath } from 'url';
 
 export async function handleIcon(options: PakeAppOptions, url: string) {
-  console.log(options.icon);
   if (options.icon) {
     if (options.icon.startsWith('http')) {
       return downloadIcon(options.icon);
@@ -24,14 +24,8 @@ export async function handleIcon(options: PakeAppOptions, url: string) {
 }
 
 export async function inferIcon(name: string, url: string) {
-  let icon = await getIconFromMacosIcons(name);
-  if (!icon) {
-    icon = await getIconFromPageUrl(url);
-  }
-  if (!icon) {
-    // TODO default icon
-  }
-  return icon;
+  const npmDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+  return path.join(npmDirectory, 'pake-default.icns');
 }
 
 export async function getIconFromPageUrl(url: string) {

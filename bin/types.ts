@@ -2,9 +2,6 @@ export interface PakeCliOptions {
   /** 应用名称 */
   name?: string;
 
-  /** 不填会取 url 的 title，取不到默认 webapp */
-  title?: string;
-
   /** 应用icon */
   icon: string;
 
@@ -22,6 +19,9 @@ export interface PakeCliOptions {
 
   /** 是否开启沉浸式头部，默认为 false 不开启 ƒ*/
   transparent: boolean;
+
+  /** 调试模式，会输出更多日志 */
+  debug: boolean;
 }
 
 export interface PakeAppOptions extends PakeCliOptions {

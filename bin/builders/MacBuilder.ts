@@ -6,15 +6,18 @@ import { PakeAppOptions } from '@/types.js';
 import { IBuilder } from './base.js';
 import appRootPath from 'app-root-path';
 import { shellExec } from '@/utils/shell.js';
+import tauriConf from '../../src-tauri/tauri.conf.json';
+import { dir } from 'tmp-promise';
+import { packageDirectory } from 'pkg-dir';
+import { fileURLToPath } from 'url';
+import log from 'loglevel';
 
 export default class MacBuilder implements IBuilder {
   async prepare() {
     if (checkRustInstalled()) {
-      console.log('Rust has been installed');
       return;
     }
 
-    console.warn('Rust is not installed, show prompt');
     const res = await prompts({
       type: 'confirm',
       message: 'Detect you have not installed Rust, install it now?',
@@ -25,45 +28,40 @@ export default class MacBuilder implements IBuilder {
       // TODO 国内有可能会超时
       await installRust();
     } else {
-      console.error('Error: Pake need Rust to package your webapp!!!');
+      log.error('Error: Pake need Rust to package your webapp!!!');
       process.exit(2);
     }
   }
 
   async build(url: string, options: PakeAppOptions) {
-    console.log('PakeAppOptions', options);
-    const tauriConfPath = path.join(appRootPath.path, 'src-tauri/tauri.conf.json');
-    const tauriConfString = await fs.readFile(tauriConfPath, 'utf-8');
-    try {
-      const tauriConf = JSON.parse(tauriConfString);
+    log.debug('PakeAppOptions', options);
 
-      const { width, height, fullscreen, transparent, title, resizable, identifier, name } = options;
+    const { width, height, fullscreen, transparent, resizable, identifier, name } = options;
 
-      const tauriConfWindowOptions = {
-        width,
-        height,
-        fullscreen,
-        transparent,
-        title,
-        resizable,
-      };
+    const tauriConfWindowOptions = {
+      width,
+      height,
+      fullscreen,
+      transparent,
+      resizable,
+    };
 
-      Object.assign(tauriConf.tauri.windows[0], { url, ...tauriConfWindowOptions });
-      tauriConf.package.productName = name;
-      tauriConf.tauri.bundle.identifier = identifier;
-      tauriConf.tauri.bundle.icon = [options.icon];
+    Object.assign(tauriConf.tauri.windows[0], { url, ...tauriConfWindowOptions });
+    tauriConf.package.productName = name;
+    tauriConf.tauri.bundle.identifier = identifier;
+    tauriConf.tauri.bundle.icon = [options.icon];
 
-      await fs.writeFile(tauriConfPath, JSON.stringify(tauriConf, null, 2));
-      const code = await shellExec(`${path.join(appRootPath.path, '/node_modules/.bin/tauri')} build --config ${tauriConfPath} --target universal-apple-darwin`);
-      const dmgName = `${name}_${'0.2.0'}_universal.dmg`;
-      await fs.copyFile(this.getBuildedAppPath(dmgName), path.resolve(dmgName));
-    } catch (error) {
-      console.error('handle tauri.conf.json error', error);
-      return;
-    }
+    const npmDirectory = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
+    const configJsonPath = path.join(npmDirectory, 'src-tauri/tauri.conf.json');
+    await fs.writeFile(configJsonPath, Buffer.from(JSON.stringify(tauriConf), 'utf-8'));
+
+    const code = await shellExec(`cd ${npmDirectory} && npm run build`);
+    const dmgName = `${name}_${'0.2.0'}_universal.dmg`;
+    const appPath = this.getBuildedAppPath(npmDirectory, dmgName);
+    await fs.copyFile(appPath, path.resolve(dmgName));
   }
 
-  getBuildedAppPath(dmgName: string) {
-    return path.join(appRootPath.path, 'src-tauri/target/universal-apple-darwin/release/bundle/dmg', dmgName);
+  getBuildedAppPath(npmDirectory: string, dmgName: string) {
+    return path.join(npmDirectory, 'src-tauri/target/universal-apple-darwin/release/bundle/dmg', dmgName);
   }
 }
